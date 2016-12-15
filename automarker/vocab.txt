@@ -1,0 +1,5 @@
+allcaps
+and
+bang
+money
+percent
