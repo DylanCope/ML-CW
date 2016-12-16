@@ -142,8 +142,6 @@
   In section \ref{classconstr} the hyperparameters $\alpha$ and $p$ of the Naive Bayes classifier were described. Figure \ref{hyperspace} visualises the three dimensional mapping $(\alpha, p) \mapsto s$ where $s$ is the mean 5-fold cross-validation score derived from the classifier constructed from the given parameters. The maxima on this surface is the point (0.7, 0.85), where the constructed classifer has an accuracy of 96\% with a standard deviation of 2\%.
 	\end{minipage}
 
-  \subsection{Comparing to Another Classifier}
-
   \section{Extending the Model}
 
   \subsection{Calibration of Naive Bayes Probabilities}
@@ -177,12 +175,10 @@
 
 	Evaluating the Brier score on the uncalibrated classifier yielded a value of 0.17. This value indicates that the confidence taken from a prediction is better than random, though can still be improved.
 
-	Isotonic regression was utilised to achieve a better confidence of a given prediction. Isotonic regression finds a non-decreasing approximation of a
-	function while minimising the mean squared error on the training data. After fitting the model using Isotonic calibration the Brier loss score decreased to 0.15, a small improvement. The marginal improvement can be observed in figure \ref{aftercal}, it can be seen that many of the points with a class probability of around 0.5 have move closer to the perfect
-	calibration line, as have the majority of the points with class probabilities of above 0.5. It can be seen that some of the points have been moved further from the line
-	of perfect calibration (points with class probability of curly equals 0.9). This could be explained by the points where the trend becomes non-monotonic.
+	Isotonic regression was utilised to achieve a better confidence of a given prediction. Isotonic regression finds a non-decreasing approximation of a function while minimising the mean squared error on the training data. After fitting the model using Isotonic calibration the Brier loss score decreased to 0.15, a small improvement. The marginal improvement can be observed in figure \ref{aftercal}, it can be seen that many of the points with a class probability of around 0.5 have moved closer to the perfect calibration line, as have the majority of the points with class probabilities of above 0.5.
 
-	\begin{minipage}{\linewidth}
+	It can be seen that some of the points have been moved further from the line of perfect calibration (points with class probability of approximately 0.9). This likely explained by the fact the function isn't actually monotonically increasing, there are points in which the gradient briefly becomes negative. However because these sections of decreasing values are short the calibration process is still somewhat effective.
+
   \subsection{Weighted Naive Bayes}
 
   Probability values were assigned to every word by dividing the total number of times the word appears across all the emails by the number of emails. More precisely for emails $e \in E$, let $f(e, w)$ detect the presence of a word in an email and $P(w\ |\ E)$ be the probabilty of a word appearing in an email.
@@ -211,6 +207,8 @@
     \centering
     \includegraphics[width=1\linewidth]{report_images/word_probs_diff}
   \end{figure}
+
+	\begin{minipage}{\linewidth}
 
 	This mapping $m$ provides a weighting to the Naive Bayes, this is implemented by treating the weights as ``know incident rates''. This adjusts the estimator equation  from \ref{estimators} in \ref{classconstr} to the following,
   \begin{align*}

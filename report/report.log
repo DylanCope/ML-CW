@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2016.11.23)  16 DEC 2016 15:40
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2016.11.23)  16 DEC 2016 17:27
 entering extended mode
 **./report.tex
 (report.tex
@@ -596,14 +596,14 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
 [1{C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map}
 
 ]
-<report_images/num_features_vs_performance.png, id=64, 1893.474pt x 510.2262pt>
+<report_images/num_features_vs_performance.png, id=60, 1893.474pt x 510.2262pt>
 File: report_images/num_features_vs_performance.png Graphic file (type png)
 <use report_images/num_features_vs_performance.png>
 Package pdftex.def Info: report_images/num_features_vs_performance.png used on 
 input line 105.
 (pdftex.def)             Requested size: 483.69687pt x 130.33562pt.
  [2 <./report_images/num_features_vs_performance.png>]
-<report_images/MultinomialNB_param_space.png, id=75, 1133.1936pt x 522.5121pt>
+<report_images/MultinomialNB_param_space.png, id=71, 1133.1936pt x 522.5121pt>
 File: report_images/MultinomialNB_param_space.png Graphic file (type png)
 
 <use report_images/MultinomialNB_param_space.png>
@@ -611,65 +611,57 @@ Package pdftex.def Info: report_images/MultinomialNB_param_space.png used on in
 put line 138.
 (pdftex.def)             Requested size: 266.03474pt x 122.66278pt.
  [3]
-<report_images/before_calibration.png, id=83, 722.7pt x 722.7pt>
+<report_images/before_calibration.png, id=79, 722.7pt x 722.7pt>
 File: report_images/before_calibration.png Graphic file (type png)
 
 <use report_images/before_calibration.png>
 Package pdftex.def Info: report_images/before_calibration.png used on input lin
-e 161.
+e 159.
 (pdftex.def)             Requested size: 217.66211pt x 217.66078pt.
 
-<report_images/after_calibration.png, id=84, 722.7pt x 722.7pt>
+<report_images/after_calibration.png, id=80, 722.7pt x 722.7pt>
 File: report_images/after_calibration.png Graphic file (type png)
 
 <use report_images/after_calibration.png>
 Package pdftex.def Info: report_images/after_calibration.png used on input line
- 167.
+ 165.
 (pdftex.def)             Requested size: 217.66211pt x 217.66078pt.
-
-Overfull \vbox (15.88118pt too high) has occurred while \output is active []
-
-
-Overfull \vbox (15.88118pt too high) has occurred while \output is active []
-
-
-Overfull \vbox (15.88118pt too high) has occurred while \output is active []
-
-
-Overfull \vbox (15.88118pt too high) has occurred while \output is active []
-
-
-[4 <./report_images/MultinomialNB_param_space.png> <./report_images/before_cali
-bration.png> <./report_images/after_calibration.png>]
-<report_images/word_probs_diff.png, id=97, 1877.5746pt x 557.2017pt>
+ [4 <./report_images/MultinomialNB_param_space.png> <./report_images/before_cal
+ibration.png> <./report_images/after_calibration.png>]
+<report_images/word_probs_diff.png, id=93, 1877.5746pt x 557.2017pt>
 File: report_images/word_probs_diff.png Graphic file (type png)
 
 <use report_images/word_probs_diff.png>
 Package pdftex.def Info: report_images/word_probs_diff.png used on input line 2
-12.
+08.
 (pdftex.def)             Requested size: 483.69687pt x 143.54268pt.
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 234.
- [5] [6 <./report_images/word_probs_diff.png>]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 234.
+ [5]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 232.
+ [6 <./report_images/word_probs_diff.png>]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 232.
  (report.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 234.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 234.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 232.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 232.
 Package rerunfilecheck Info: File `report.out' has not changed.
-(rerunfilecheck)             Checksum: 04A431440E3912AA16B6AC5DFA33D288;784.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 234.
+(rerunfilecheck)             Checksum: 39F4006DFE58D02E9411252F2115A332;702.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 232.
  )
 (\end occurred inside a group at level 1)
 
 ### simple group (level 1) entered at line 1061 ({)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 9513 strings out of 493334
- 141614 string characters out of 3139251
+ 9511 strings out of 493334
+ 141584 string characters out of 3139251
  261764 words of memory out of 3000000
- 12872 multiletter control sequences out of 15000+200000
+ 12871 multiletter control sequences out of 15000+200000
  10108 words of font info for 39 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 36i,18n,43p,882b,7347s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 36i,16n,43p,882b,7304s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmb
 x12.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmex10.pfb>
 <C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Prog
@@ -680,9 +672,9 @@ type1/public/amsfonts/cm/cmr8.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/publ
 ic/amsfonts/cm/cmsy10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfo
 nts/cm/cmsy8.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/symbo
 ls/msam10.pfb>
-Output written on report.pdf (6 pages, 424236 bytes).
+Output written on report.pdf (6 pages, 423679 bytes).
 PDF statistics:
- 153 PDF objects out of 1000 (max. 8388607)
- 25 named destinations out of 1000 (max. 500000)
- 114 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 148 PDF objects out of 1000 (max. 8388607)
+ 24 named destinations out of 1000 (max. 500000)
+ 106 words of extra memory for PDF output out of 10000 (max. 10000000)
 
