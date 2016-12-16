@@ -56,11 +56,15 @@
   To prepare the data for a Naive Bayes model boolean features needed to be extracted from the emails. First the emails were preprocessed by splitting the text by whitespace and filtering out any strings that aren't composed purely of alphabetical characters. Next a list of words needed to be determined for a feature extraction process that checked the presence of a word in a email. In constructing this model a process for extracting feature words from the training set needs be provided. The primary reason for including the extraction process here is to ensure the feature words are determined purely from the training data, if the words were chosen from the entire available set of emails any scoring of the classifier would be invalid as it would be impossible to tell if the model had overfit.
 
   The Naive Bayes classifier for is defined by two estimator vectors $\utilde{\hat{\theta}}_s$ and $\utilde{\hat{\theta}}_h$ corresponding to spam and ham. Each element in the vectors then corresponds to a probability associated with the presence of a feature word. To tune the classifier's estimators the training emails $E$ are transformed to a matrix $X$ where each column corresponds to a feature word and each row corresponds to an email. The value of each entry in $X$ is either a 1 or a 0 depending on if the word for the column is in the email for the row. The rows of $X$ are then grouped by class and summated down the columns. The resultant bit vectors are then divided by the number of instances in that class to give the final estimator vectors with elements of the form,
-  $$ \hat{\theta}_i = \frac{x_i}{N} $$
+  $ \hat{\theta}_i = \frac{x_i}{N} $
   where $x_i$ are the observations and $N$ is the number of trials.
 
-  So far what been described is a simple Naive Bayes model with no smoothing. The implemented spam filter uses additive smoothing to allow the assignment of non-zero probabilities to words which do not occur in the sample. This changes the class estimators to be of the form,
-  $$ \hat{\theta}_i = \frac{x_i + \alpha}{N + \alpha d} $$
+  So far what been described is a simple Naive Bayes model with no smoothing. The implemented spam filter uses additive smoothing to allow the assignment of non-zero probabilities to words which do not occur in the sample. This changes the class estimators to be of the form shown in equation \ref{estimators}, additionally the logarithm is taken to avoid arithmetic underflow as we expect some probabilities to be very small,
+  \begin{equation} \label{estimators}
+		\hat{\theta}_i = \frac{x_i + \alpha}{N + \alpha d}
+		\hspace{1.5cm}
+		\therefore \log \hat{\theta}_i = \log(x_i + \alpha) - \log(N + \alpha d)
+	\end{equation}
   where $\alpha$ is the smoothing parameter and $d$ is the number of features.
 
   Finally with the tuned estimators a decision rule is determined for classifying future data. Given an observation $\utilde{x}$ and class priors $p$ and $(1-p)$ for ham and spam respectively we can define a classification function $C$,
@@ -122,13 +126,7 @@
 
   The use of all of these methods in conjunction resulted in a mean 5-fold cross-validation score of 94\% with a 3\% standard devidation - a 5\% improvement from the simple preprocessing and a 14\% improvement from the baseline.
 
-
-  % \subsection{Improved Feature Extraction}
-  %
-
-
-  \pagebreak
-
+	\begin{minipage}{\linewidth}
   \subsection{Optimising Classifier Hyperparameters} \label{hyperopt}
 
   \begin{wrapfigure}{R}{0.55\textwidth}
@@ -141,39 +139,71 @@
     \vspace{-1cm}
   \end{wrapfigure}
 
-  In section \ref{classconstr} the hyperparameters $\alpha$ and $p$ of the Naive Bayes classifier were described. Figure \ref{hyperspace} visualises the three dimensional mapping $(\alpha, p) \mapsto s$ where $s$ is the mean 5-fold cross-validation score derived from the classifier constructed from the given parameters. The maxima on this surface is the point (0.7, 0.9), where the constructed classifer has an accuracy of 97\% with a standard deviation of 2\%.
+  In section \ref{classconstr} the hyperparameters $\alpha$ and $p$ of the Naive Bayes classifier were described. Figure \ref{hyperspace} visualises the three dimensional mapping $(\alpha, p) \mapsto s$ where $s$ is the mean 5-fold cross-validation score derived from the classifier constructed from the given parameters. The maxima on this surface is the point (0.7, 0.85), where the constructed classifer has an accuracy of 96\% with a standard deviation of 2\%.
+	\end{minipage}
 
   \subsection{Comparing to Another Classifier}
-
-
 
   \section{Extending the Model}
 
   \subsection{Calibration of Naive Bayes Probabilities}
 
+	The Naive Bayes classifier assumes that within each class, each of the feature values is independent of one another. Though this assumption is often incorrect, the classifier can still yield accurate results. However, the dependence of features within a class can lead to inaccurate probability estimates.
+
+	A classifier can be regarded as well calibrated if the probability of a prediction can give an indication of confidence of that prediction.  That is, if the Naive Bayes classifier is well calibrated and we select only the instances which have a probability of around 0.7, then around 70\% of that sample should belong to the positive class.
+
+	Figure \ref{beforecal} below shows the uncalibrated probabilities for the spam class. Each data point indicates the fraction of class which is within +/- 0.1 of the class probability value. The dashed lines indicates the ideal trend line for perfectly calibrated probabilities, where at this point the probability exactly reflects the prediction.
+
+	\begin{multicols}{2}
+		\begin{figure}[H]
+	    \caption{Before Calibration}
+	    \label{beforecal}
+	    \includegraphics[width=0.45\textwidth]{report_images/before_calibration}
+	  \end{figure}
+		\columnbreak
+		\begin{figure}[H]
+			\caption{After Calibration}
+			\label{aftercal}
+			\includegraphics[width=0.45\textwidth]{report_images/after_calibration}
+		\end{figure}
+	\end{multicols}
+
+	It can be observed that as the class probability tends from 0.0 to 0.5 that the reliability of the prediction also decreases. As the probability tends from 0.5 to 1.0 the classifier appears to tend towards perfect calibration
+	before beginning to under-predict the proportion of the positive class.
+
+	To provide a quantification of the level of calibration the Brier score was evaluated. The Brier score metric measures the mean square difference between the predicted probability assigned to the possible outcomes for item $i$ and the actual outcome $o_i$. In short, the lower a Brier score for a set of predictions, the better calibrated a classifier is.
+
+	We first establish a type of baseline for the Brier score to compare our results with. It can be observed that if the classifier always predicted the probability of spam as 50\% then the Brier score loss would be 0.25 irrespective of the prediction as $(0.50 - 1)^2 = (0.50 - 0)^2 = 0.25$.
+
+	Evaluating the Brier score on the uncalibrated classifier yielded a value of 0.17. This value indicates that the confidence taken from a prediction is better than random, though can still be improved.
+
+	Isotonic regression was utilised to achieve a better confidence of a given prediction. Isotonic regression finds a non-decreasing approximation of a
+	function while minimising the mean squared error on the training data. After fitting the model using Isotonic calibration the Brier loss score decreased to 0.15, a small improvement. The marginal improvement can be observed in figure \ref{aftercal}, it can be seen that many of the points with a class probability of around 0.5 have move closer to the perfect
+	calibration line, as have the majority of the points with class probabilities of above 0.5. It can be seen that some of the points have been moved further from the line
+	of perfect calibration (points with class probability of curly equals 0.9). This could be explained by the points where the trend becomes non-monotonic.
+
+	\begin{minipage}{\linewidth}
   \subsection{Weighted Naive Bayes}
 
-  Probability values were assigned to every word by dividing the total number of times the word appears across all the emails by the number of emails. More precisely for emails $e \in E$, let $f(e, w)$ detect the presence of a word in an email and $P(w | E)$ be the probabilty of a word appearing in an email.
-
-  \vspace{-0.5cm}
+  Probability values were assigned to every word by dividing the total number of times the word appears across all the emails by the number of emails. More precisely for emails $e \in E$, let $f(e, w)$ detect the presence of a word in an email and $P(w\ |\ E)$ be the probabilty of a word appearing in an email.
+  \vspace{-0.1cm}
   \begin{align*}
-    f(e, w) &= \begin{cases}
+    f(e, w) = \begin{cases}
       1   & \text{if } w \in e \\
       0   & \text{otherwise}
-    \end{cases} \\
-    \\
-    \therefore P(w\ |\ E) &= \frac{1}{|E|}\sum_{e \in E}{f(e, w)}
+    \end{cases}
+		\hspace{1.5cm}
+    \therefore P(w\ |\ E) = \frac{1}{|E|}\sum_{e \in E}{f(e, w)}
   \end{align*}
-  \vspace{-0.5cm}
-
-  The motivation in constructing feature words was to look for the presence of words that best distinguished between spam and ham emails. Hence for the sets $S$ and $H$ of spam and ham emails a metric $d$ was devised to measure how well a given word differentiates between the classes:
-  \vspace{-0.5cm}
+	% \end{minipage}
+	% \begin{minipage}{\linewidth}
+  For the sets $S$ and $H$ of spam and ham emails a metric $d$ was devised to measure how well a given word differentiates between the classes:
+  \vspace{-0.1cm}
   \begin{align*}
     d(w) = \max(|P(w\ |\ S)|,\ |P(w\ |\ H)|)
   \end{align*}
   Figure \ref{wordprobsham} plots this metric for the top thirty words across all the emails.
 
-  \vspace{0.5cm}
   \begin{figure}[H]
     \caption{Top 30 most differentiating words}
     \label{wordprobsham}
@@ -181,5 +211,14 @@
     \centering
     \includegraphics[width=1\linewidth]{report_images/word_probs_diff}
   \end{figure}
+
+	This mapping $d$ provides a weighting to the Naive Bayes by multiplication with associated elements of the estimator vectors, following from equation \ref{estimators} in \ref{classconstr},
+  \begin{align*}
+		\hat{\theta}_i &= d(w_i)\frac{x_i + \alpha}{N + \alpha d} \\
+		\log \hat{\theta}_i = \log d(w_i) &+ \log(x_i + \alpha) - \log(N + \alpha d)
+	\end{align*}
+	Therefore the weighted model is simply implemented by adding togther the already existing estimator vectors and the logarithm of the weightings vector. In the actual implementation however the expression $d(w_i)$ was replaced with $d(w_i) + 1$ to avoid taking taking the logarithm of zero. The result of assessing this classifier by the mean 5-fold cross validation score is an accuracy of 97\% with a standard devidation of 1\%.
+
+	\end{minipage}
 
 \end{document}

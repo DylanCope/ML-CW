@@ -1,0 +1,127 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2016.11.23)  15 DEC 2016 20:30
+entering extended mode
+**report.te
+("C:\Program Files\MiKTeX 2.9\tex\latex\tools\.tex"
+LaTeX2e <2016/03/31> patch level 3
+Babel <3.9r> and hyphenation patterns for 75 language(s) loaded.
+File ignored)
+*
+(Please type a command or say `\end')
+*
+(Please type a command or say `\end')
+*end
+
+! LaTeX Error: Missing \begin{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+<*> e
+     nd
+? 
+Missing character: There is no e in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no d in font nullfont!
+
+*
+
+Overfull \hbox (20.0pt too wide) detected at line 0
+[] 
+ []
+
+(Please type a command or say `\end')
+*
+(Please type a command or say `\end')
+*
+(Please type a command or say `\end')
+*
+(Please type a command or say `\end')
+*
+(Please type a command or say `\end')
+*
+(Please type a command or say `\end')
+*
+(Please type a command or say `\end')
+*end
+
+! LaTeX Error: Missing \begin{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+<*> e
+     nd
+? 
+Missing character: There is no e in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no d in font nullfont!
+
+*end
+Missing character: There is no e in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no d in font nullfont!
+
+*end
+Missing character: There is no e in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no d in font nullfont!
+
+*end
+Missing character: There is no e in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no d in font nullfont!
+
+*
+
+Overfull \hbox (20.0pt too wide) detected at line 0
+[]
+ []
+
+(Please type a command or say `\end')
+*
+(Please type a command or say `\end')
+*
+(Please type a command or say `\end')
+*
+(Please type a command or say `\end')
+*
+(Please type a command or say `\end')
+*
+(Please type a command or say `\end')
+*Lw
+! Interruption.
+<*> 
+    Lw
+? quit
+OK, entering \batchmode...
+
+! LaTeX Error: Missing \begin{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+<*> L
+     w
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+Missing character: There is no L in font nullfont!
+Missing character: There is no w in font nullfont!
+! Emergency stop.
+<*> Lw
+      
+*** (job aborted, no legal \end found)
+
+ 
+Here is how much of TeX's memory you used:
+ 8 strings out of 493334
+ 197 string characters out of 3139251
+ 53242 words of memory out of 3000000
+ 3636 multiletter control sequences out of 15000+200000
+ 3640 words of font info for 14 fonts, out of 3000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 5i,0n,4p,90b,14s stack positions out of 5000i,500n,10000p,200000b,50000s
+!  ==> Fatal error occurred, no output PDF file produced!
