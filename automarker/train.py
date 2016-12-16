@@ -1,3 +1,4 @@
+from __future__ import division
 import re
 import sys
 import pickle
@@ -84,10 +85,10 @@ def hasNumbers( string ):
     return any( c.isdigit() for c in string )
 
 def isNumber( string ):
-    return string.replace('.', '').isdigit()
+    return string.replace( '.', '' ).isdigit()
 
 def isAscii(s):
-    return all(ord(c) < 128 for c in s)
+    return all( ord(c) < 128 for c in s )
 
 def processNumerics( text ):
     words = text.split()
@@ -132,16 +133,16 @@ def getAllWords( emails ):
         Returns: Set of strings that appear separated
             by whitespace in emails
     '''
-    return set(sum( [ e.split() for e in emails ], [] ))
+    return list(set(sum( [ e.split() for e in emails ], [] )))
 
 def probabilities( emails, words ):
     '''
         Given a list were each item is a list of words,
         returns a dictionary that map words to probabilties
     '''
-    ws = sum( [ [ w for w in e.split() if w in words ] for e in emails ], [] )
+    ws = sum( [ list(set(e.split())) for e in emails ], [] )
     counter = collections.Counter( ws )
-    return { k : v / len( ws ) for k, v in counter.items() }
+    return { k : v / len( emails ) for k, v in counter.items() }
 
 def histDifference( h1, h2 ):
     '''
@@ -158,9 +159,27 @@ def getFeatureWords( emails, labels ):
     hamProbs  = probabilities( ham, words )
     spamHamDiff = histDifference( spamProbs, hamProbs )
     hamSpamDiff = histDifference( hamProbs, spamProbs )
-    mostIdentifying = dict( ( k, max( abs(spamHamDiff[k]), abs(hamSpamDiff[k]) ) ) for k in chain( hamSpamDiff, spamHamDiff ) )
+    d = lambda k : abs(spamHamDiff[k]) + abs(hamSpamDiff[k])
+    # dMax = max(map( d, chain( hamSpamDiff, spamHamDiff ) ))
+    return dict( ( k, d(k) ) for k in chain( hamSpamDiff, spamHamDiff ) )
 
-    return mostIdentifying
+def getWordsWeights( emails, labels ):
+    spam = [ e for e, l in zip( emails, labels ) if l == 1 ]
+    ham  = [ e for e, l in zip( emails, labels ) if l == 0 ]
+    words = getAllWords( emails )
+    spamProbs = probabilities( spam, words )
+    hamProbs  = probabilities( ham, words )
+    spamHamDiff = histDifference( spamProbs, hamProbs )
+    hamSpamDiff = histDifference( hamProbs, spamProbs )
+    spamWeights = list( spamHamDiff.values() )
+    spamWords   = list( spamHamDiff.keys() )
+    spamWeights = [ x - min(spamWeights) for x in spamWeights ]
+    spamWeights = [ x / max(spamWeights) for x in spamWeights ]
+    hamWeights = list( hamSpamDiff.values() )
+    hamWords   = list( hamSpamDiff.keys() )
+    hamWeights = [ x - min(hamWeights) for x in hamWeights ]
+    hamWeights = [ x / max(hamWeights) for x in hamWeights ]
+    return dict(zip( spamWords, spamWeights )), dict(zip( hamWords, hamWeights ))
 
 def unpackTraining( index, emails, y ):
     ''' Unpacks training data from a KFold split '''
@@ -188,29 +207,31 @@ def crossValScore( model, n_splits = 5 ):
     split = KFold( len( emails ),
                    n_folds = n_splits,
                    shuffle = True,
-                   random_state = 0 )
+                   random_state = 1 )
     scores = []
     for index in split:
         clf, transform = model( *unpackTraining( index, emails, y ) )
         emails_test, y_test = unpackTesting( index, emails, y )
         X_test = transform( emails_test )
         s = clf.score( X_test, y_test )
-        print('Accuracy: %0.3f' % s)
+        print( 'Accuracy: %0.3f' % s )
         scores += [ s ]
 
-    return np.array(scores)
+    return np.array( scores )
 
 class WeightedMultinomialNB( MultinomialNB ):
 
-    def __init__( self, weights, vectorizer, **kwargs ):
+    def __init__( self, spamWeights, hamWeights, vectorizer, **kwargs ):
         super( WeightedMultinomialNB, self ).__init__( **kwargs )
-        self.weights = np.array(weights)
+        self.spamWeights = np.array( spamWeights )
+        self.hamWeights = np.array( hamWeights )
         self.vectorizer = vectorizer
 
     def _update_feature_log_prob( self ):
         ''' Weight the feature logarithm probabilities '''
         super( WeightedMultinomialNB, self )._update_feature_log_prob()
-        self.feature_log_prob_ += np.log(1 + self.weights)
+        self.feature_log_prob_[0] += np.log( 1 + self.hamWeights )
+        self.feature_log_prob_[1] += np.log( 1 + self.spamWeights )
 
     def classify( self, email ):
         ''' Returns 'spam' or 'ham' '''
@@ -228,22 +249,27 @@ def buildModel( emails, labels ):
     hyperparams = { 'alpha'         : 0.7,
                     'class_prior'   : [0.8, 0.2] }
 
-    emails, labels = getData()
     processed = map( advancedPreprocess, emails )
-    featureWords = getFeatureWords( processed, labels )
-    vocab = list( featureWords.keys() )
-    weights = list( featureWords.values() )
+    # featureWords = getFeatureWords( processed, labels )
+    # vocab = list( featureWords.keys() )
+    words = getAllWords( processed )
+    spamWordWeights, hamWordWeights = getWordsWeights( processed, labels )
+    vocab = [ word for word in words \
+              if word in spamWordWeights and word in hamWordWeights]
+    spamWeights = [ spamWordWeights[word] for word in vocab ]
+    hamWeights  = [ hamWordWeights[word]  for word in vocab ]
 
     vectorizer = CountVectorizer( vocabulary = vocab, **vecparams )
     vectorizer.fit( emails )
     X = vectorizer.transform( emails )
-    clf = WeightedMultinomialNB( weights, vectorizer, **hyperparams )
+    clf = WeightedMultinomialNB( spamWeights, hamWeights,
+                                 vectorizer, **hyperparams )
     clf.fit( X, labels )
 
     return clf, vectorizer.transform
 
 if __name__ == '__main__':
     scores = crossValScore( buildModel )
-    print('Mean accuracy: %0.3f (+/- %0.3f)' % (scores.mean(), scores.std()))
+    print( 'Mean accuracy: %0.3f (+/- %0.3f)' % (scores.mean(), scores.std()) )
     clf, _ = buildModel( *getData() )
     joblib.dump( clf, 'classifier.dat' )
