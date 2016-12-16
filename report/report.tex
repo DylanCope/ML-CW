@@ -197,27 +197,37 @@
   \end{align*}
 	% \end{minipage}
 	% \begin{minipage}{\linewidth}
-  For the sets $S$ and $H$ of spam and ham emails a metric $d$ was devised to measure how well a given word differentiates between the classes:
+  For the sets $S$ and $H$ of spam and ham emails a metric $m$ was devised to measure how well a given word differentiates between the classes:
   \vspace{-0.1cm}
   \begin{align*}
-    d(w) = \max(|P(w\ |\ S)|,\ |P(w\ |\ H)|)
+    m(w) = |P(w\ |\ S)| + |P(w\ |\ H)|
   \end{align*}
-  Figure \ref{wordprobsham} plots this metric for the top thirty words across all the emails.
+  Figure \ref{wordprobsham} plots this metric for the top sixty words across all the emails.
 
   \begin{figure}[H]
-    \caption{Top 30 most differentiating words}
+    \caption{Top 60 most differentiating words}
     \label{wordprobsham}
     \vspace{-0.2cm}
     \centering
     \includegraphics[width=1\linewidth]{report_images/word_probs_diff}
   \end{figure}
 
-	This mapping $d$ provides a weighting to the Naive Bayes by multiplication with associated elements of the estimator vectors, following from equation \ref{estimators} in \ref{classconstr},
+	This mapping $m$ provides a weighting to the Naive Bayes, this is implemented by treating the weights as ``know incident rates''. This adjusts the estimator equation  from \ref{estimators} in \ref{classconstr} to the following,
   \begin{align*}
-		\hat{\theta}_i &= d(w_i)\frac{x_i + \alpha}{N + \alpha d} \\
-		\log \hat{\theta}_i = \log d(w_i) &+ \log(x_i + \alpha) - \log(N + \alpha d)
+		\hat{\theta}_i &= \frac{x_i + m(w_i) \alpha d}{N + \alpha d}
 	\end{align*}
-	Therefore the weighted model is simply implemented by adding togther the already existing estimator vectors and the logarithm of the weightings vector. In the actual implementation however the expression $d(w_i)$ was replaced with $d(w_i) + 1$ to avoid taking taking the logarithm of zero. The result of assessing this classifier by the mean 5-fold cross validation score is an accuracy of 97\% with a standard devidation of 1\%.
+	% Therefore the weighted model is simply implemented by adding togther the already existing estimator vectors and the logarithm of the weightings vector. In the actual implementation however the expression $d(w_i)$ was replaced with $d(w_i) + 1$ to avoid taking taking the logarithm of zero.
+	Where $w_i$ is the word corresponding to the $i$-th feature. Features with a non-positive $m$ were removed to allow taking the logarithm of the estimator. The result of assessing this classifier by the mean 5-fold cross validation score is an accuracy of 97\% with a standard devidation of 1\%, Table \ref{finalperf} details the performance across the folds.
+
+	\begin{table}[H]
+	\centering
+	\caption{Final Classifier's Performance}
+	\label{finalperf}
+	\begin{tabular}{llllllll}
+     & Fold 1 & Fold 2 & Fold 3 & Fold 4 & Fold 5 & Mean & Standard Deviation \\
+		 Score: & 0.990 & 0.960 & 0.970 & 0.980 & 0.960 & 0.972 & 0.012
+	\end{tabular}
+	\end{table}
 
 	\end{minipage}
 
