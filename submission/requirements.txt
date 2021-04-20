@@ -40,7 +40,7 @@ policycoreutils-default-encoding==0.1
 pycrypto==2.6.1
 pycups==1.9.63
 pycurl==7.19.0
-Pygments==1.4
+Pygments==2.7.4
 pygobject==3.14.0
 pygpgme==0.3
 pyinotify==0.9.4
