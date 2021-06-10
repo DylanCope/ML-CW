@@ -10,7 +10,7 @@ Cython==0.24.1
 dask==0.12.0
 decorator==3.4.0
 di==0.3
-Django==1.6.12
+Django==2.2.24
 docutils==0.12
 ethtool==0.8
 firstboot==19.5
