@@ -18,7 +18,7 @@ fros==1.0
 iniparse==0.4
 ipaddr==2.1.9
 IPy==0.75
-ipython==3.2.1
+ipython==8.10.0
 javapackages==1.0.0
 jsonschema==2.3.0
 kitchen==1.1.1
