@@ -59,7 +59,7 @@ pyxattr==0.5.1
 pyzmq==14.3.1
 scikit-image==0.12.3
 scikit-learn==0.17.1
-scipy==0.18.1
+scipy==1.10.0
 seobject==0.1
 sepolicy==1.1
 setroubleshoot==1.1
